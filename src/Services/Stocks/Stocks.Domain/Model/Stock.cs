@@ -18,7 +18,6 @@ namespace StockExchangeAnalyzer.Services.Stocks.Domain.Model
 
         public string Isin { get; private set; }
         public string Name { get; private set; }
-
         public IReadOnlyCollection<StockQuotation> Quotations => _quotations;
 
         public void AddQuotation(
