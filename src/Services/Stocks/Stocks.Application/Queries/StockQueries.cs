@@ -19,8 +19,8 @@ namespace StockExchangeAnalyzer.Services.Stocks.Application.Queries
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                return await connection.QueryAsync<IEnumerable<dynamic>>(@"
-                    SELECT q.[Date], q.[Open], q.[Close], q.[Low], q.[High], q.[Change], q.[Volume], q.[Value], q.[Transactions]
+                return await connection.QueryAsync<dynamic>(@"
+                    SELECT q.[DateTime], q.[Open], q.[Close], q.[Low], q.[High], q.[Change], q.[Volume], q.[Value], q.[Transactions]
                     FROM [dbo].[StockQuotations] q
                     WHERE q.[Isin] = @isin
                     ORDER BY q.[DateTime]", new { isin });
@@ -31,7 +31,7 @@ namespace StockExchangeAnalyzer.Services.Stocks.Application.Queries
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                return await connection.QueryAsync<IEnumerable<dynamic>>(@"
+                return await connection.QueryAsync<dynamic>(@"
                     SELECT TOP(10) s.[Isin], s.[Name], q.[Open], q.[Close], q.[Low], q.[High], q.[Change], q.[Volume], q.[Value], q.[Transactions]
                     FROM [dbo].[Stocks] s
                     LEFT JOIN [dbo].[StockQuotations] AS q ON q.[Isin] = s.[Isin]
@@ -44,7 +44,7 @@ namespace StockExchangeAnalyzer.Services.Stocks.Application.Queries
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                return await connection.QueryAsync<IEnumerable<dynamic>>(@"
+                return await connection.QueryAsync<dynamic>(@"
                     SELECT TOP(10) s.[Isin], s.[Name], q.[Open], q.[Close], q.[Low], q.[High], q.[Change], q.[Volume], q.[Value], q.[Transactions]
                     FROM [dbo].[Stocks] s
                     LEFT JOIN [dbo].[StockQuotations] AS q ON q.[Isin] = s.[Isin]
@@ -57,7 +57,7 @@ namespace StockExchangeAnalyzer.Services.Stocks.Application.Queries
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                return await connection.QueryAsync<IEnumerable<dynamic>>(@"
+                return await connection.QueryAsync<dynamic>(@"
                     SELECT TOP(10) s.[Isin], s.[Name], q.[Open], q.[Close], q.[Low], q.[High], q.[Change], q.[Volume], q.[Value], q.[Transactions]
                     FROM [dbo].[Stocks] s
                     LEFT JOIN [dbo].[StockQuotations] AS q ON q.[Isin] = s.[Isin]

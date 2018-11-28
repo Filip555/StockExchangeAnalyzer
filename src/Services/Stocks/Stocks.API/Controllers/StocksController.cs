@@ -1,44 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace StockExchangeAnalyzer.Services.Stocks.API.Controllers
 {
-    [Route("api/[controller]")]
+    using Application.Queries;
+
+    [Route("api/v1/[controller]")]
     public class StocksController : Controller
     {
-        // GET api/values
+        readonly IStockQueries _stockQueries;
+
+        public StocksController(IStockQueries stockQueries)
+        {
+            _stockQueries = stockQueries;
+        }
+
+        [Route("quotations/{isin}")]
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> GetStockQuotationsAsync(string isin)
         {
-            return new string[] { "value1", "value2" };
+            var stocks = await _stockQueries.GetStockQuotationsAsync(isin);
+            return Ok(stocks);
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [Route("top10-gaining")]
+        [HttpGet]
+        public async Task<IActionResult> GetTop10GainingStocksAsync()
         {
-            return "value";
+            var stocks = await _stockQueries.GetTop10GainingStocksAsync();
+            return Ok(stocks);
         }
 
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody]string value)
+        [Route("top10-declaining")]
+        [HttpGet]
+        public async Task<IActionResult> GetTop10DeclainingStocksAsync()
         {
+            var stocks = await _stockQueries.GetTop10DeclainingStocksAsync();
+            return Ok(stocks);
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        [Route("top10-most-active")]
+        [HttpGet]
+        public async Task<IActionResult> GetTop10MostActiveStocksAsync()
         {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            var stocks = await _stockQueries.GetTop10MostActiveStocksAsync();
+            return Ok(stocks);
         }
     }
 }

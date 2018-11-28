@@ -10,7 +10,7 @@ using Swashbuckle.AspNetCore.Swagger;
 namespace StockExchangeAnalyzer.Services.Stocks.API
 {
     using Application.Commands;
-    //using Application.Queries;
+    using Application.Queries;
     using Domain.Model;
     using Infrastructure;
     using Infrastructure.Repositories;
@@ -27,12 +27,12 @@ namespace StockExchangeAnalyzer.Services.Stocks.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IStockCommands, StockCommands>();
-            //services.AddTransient<IStockQueries, StockQueries>();
+            services.AddTransient<IStockQueries, StockQueries>(x => { return new StockQueries(Configuration.GetConnectionString("Stock")); });
             services.AddTransient<IStockRepository, StockRepository>();
             services.AddEntityFrameworkSqlServer()
                    .AddDbContext<StockContext>(options =>
                    {
-                       options.UseSqlServer(Configuration["ConnectionString"],
+                       options.UseSqlServer(Configuration.GetConnectionString("Stock"),
                            sqlServerOptionsAction: sqlOptions =>
                            {
                                sqlOptions.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
