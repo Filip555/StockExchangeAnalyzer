@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Stocks.Console": {
+      "commandName": "Project",
+      "commandLineArgs": "incremental-import"
+    }
+  }
+}

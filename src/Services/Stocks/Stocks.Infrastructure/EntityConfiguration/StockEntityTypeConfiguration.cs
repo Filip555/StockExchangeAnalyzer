@@ -20,7 +20,8 @@ namespace StockExchangeAnalyzer.Services.Stocks.Infrastructure.EntityConfigurati
                 .IsRequired();
             configuration
                 .HasMany(x => x.Quotations)
-                .WithOne();
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

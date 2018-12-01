@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace StockExchangeAnalyzer.Services.Stocks.Application.Commands
 {
@@ -7,32 +8,30 @@ namespace StockExchangeAnalyzer.Services.Stocks.Application.Commands
     public class StockCommands : IStockCommands
     {
         readonly IStockRepository _stockRepository;
+        readonly IStockService _stockService;
 
-        public StockCommands(IStockRepository stockRepository)
+        public StockCommands(
+            IStockRepository stockRepository, 
+            IStockService stockService)
         {
             _stockRepository = stockRepository;
+            _stockService = stockService;
         }
 
-        public async Task ExecuteAsync(AddStockCommand command)
+        public async Task ExecuteAsync(FullImportCommand command)
         {
-            var stock = new Stock(command.Isin, command.Name);
-            await _stockRepository.AddAsync(stock);
+            var fromDate = new DateTime(2016, 1, 1);
+            var stocks = await _stockService.DownloadAsync(fromDate);
+            await _stockRepository.RemoveAllAsync();
+            await _stockRepository.AddAllAsync(stocks);
         }
 
-        public async Task ExecuteAsync(AddStockQuotationCommand command)
+        public async Task ExecuteAsync(IncrementalImportCommand command)
         {
-            var stock = await _stockRepository.GetAsync(command.Isin);
-            stock.AddQuotation(
-                command.Date,
-                command.Open,
-                command.Close,
-                command.Low,
-                command.High,
-                command.Change,
-                command.Volume,
-                command.Value,
-                command.Transactions);
-            await _stockRepository.UpdateAsync(stock);
+            var lastUpdated = await _stockRepository.GetLastUpdatedAsync();
+            var fromDate = lastUpdated?.AddDays(1) ?? new DateTime(2016, 1, 1);
+            var stocks = await _stockService.DownloadAsync(fromDate);
+            await _stockRepository.UpdateAllAsync(stocks);
         }
     }
 }

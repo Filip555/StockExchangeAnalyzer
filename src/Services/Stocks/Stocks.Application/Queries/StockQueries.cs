@@ -15,6 +15,16 @@ namespace StockExchangeAnalyzer.Services.Stocks.Application.Queries
             _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
         }
 
+        public async Task<IEnumerable<dynamic>> GetStockListAsync()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                return await connection.QueryAsync<dynamic>(@"
+                    SELECT s.[Isin], s.[Name]
+                    FROM [dbo].[Stocks] s");
+            }
+        }
+
         public async Task<IEnumerable<dynamic>> GetStockQuotationsAsync(string isin)
         {
             using (var connection = new SqlConnection(_connectionString))

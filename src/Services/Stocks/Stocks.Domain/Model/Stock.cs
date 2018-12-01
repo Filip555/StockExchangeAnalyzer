@@ -20,6 +20,11 @@ namespace StockExchangeAnalyzer.Services.Stocks.Domain.Model
         public string Name { get; private set; }
         public IReadOnlyCollection<StockQuotation> Quotations => _quotations;
 
+        public void ChangeName(string name)
+        {
+            Name = name;
+        }
+
         public void AddQuotation(
             DateTime date,
             decimal open,
